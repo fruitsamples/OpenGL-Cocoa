@@ -46,9 +46,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import <OpenGL/gl.h>
-#import <OpenGL/glext.h>
-#import <OpenGL/glu.h>
+#import "EXTOpenGL.h"
 
 #import "uniformValue.h"
 
@@ -95,5 +93,7 @@
 -(BOOL) checkReportOpenGLError: (NSString *) function;
 
 - (void) invalidateProgram; // called on renderer change to 
+
+- (void) changedGeometryShader;
 
 @end

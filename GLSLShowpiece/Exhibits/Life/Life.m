@@ -65,6 +65,7 @@ Abstract: Life Exhibit
    {
       NSBundle *bundle;
       NSString *fragment_string;
+      NSString *vertex_string;
 
       bundle = [NSBundle bundleForClass: [self class]];
 
@@ -76,9 +77,11 @@ Abstract: Life Exhibit
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, lifeTextureWidth, lifeTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
 		/* Load vertex and fragment shader */
+		vertex_string = [bundle pathForResource: @"Life" ofType: @"vert"];
+		vertex_string = [NSString stringWithContentsOfFile: vertex_string];
 		fragment_string = [bundle pathForResource: @"Life" ofType: @"frag"];
 		fragment_string = [NSString stringWithContentsOfFile: fragment_string];
-		if ([self loadVertexShader: nil fragmentShader: fragment_string])
+		if ([self loadVertexShader: vertex_string fragmentShader: fragment_string])
 			NSLog(@"Failed to load Life");
 			
 		/* Setup uniforms */
@@ -162,8 +165,6 @@ Abstract: Life Exhibit
 			
 			glUseProgramObjectARB(program_object);
 
-			[self updateSimulationDimensions];
-			
 			//compute the part of the power-of-two life texture we care about
 			double useableTextureS, useableTextureT;
 			useableTextureS = (double)viewport[2] / (double)lifeTextureWidth;
@@ -186,6 +187,8 @@ Abstract: Life Exhibit
 			glVertex2d(0, 0);
 			glEnd();
 			
+			[self updateSimulationDimensions];
+
 			//copy this next generation back to the currentGeneration texture
 			CopyFramebufferToTexture(currentGeneration);
 

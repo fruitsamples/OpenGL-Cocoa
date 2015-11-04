@@ -46,7 +46,7 @@
 #include "trackball.h"
 #include "teapot.h"
 #include <OpenGL/CGLRenderers.h>
-#include <OpenGL/OpenGL.h>
+#include "EXTOpenGL.h"
 #import <OpenGL/CGLTypes.h>
 
 recVec gOrigin = {0.0, 0.0, 0.0};
@@ -507,21 +507,21 @@ static GLenum glReportErrorWithFileLine (char *file, int line)
 		theta1 = j * 2.0 * M_PI / n - M_PI_2;
 		theta2 = (j + 1) * 2.0 * M_PI / n - M_PI_2;
 
-		yTex = 2.0f * (j + 1) / (GLfloat)n;
-		yTex1 = 2.0f * j / (GLfloat)n;
+		yTex = 2.0f * (n/2 - j) / (GLfloat)n;
+		yTex1 = 2.0f * (n/2 - j - 1) / (GLfloat)n;
 
 		glBegin(GL_TRIANGLE_STRIP);
 			for (i=0;i<=n;i++) {
 				theta3 = i * 2.0 * M_PI / n;
 
-				e[0] = cos(theta2) * cos(theta3);
-				e[1] = sin(theta2);
-				e[2] = cos(theta2) * sin(theta3);
+				e[0] = cos(theta1) * cos(theta3);
+				e[1] = sin(theta1);
+				e[2] = cos(theta1) * sin(theta3);
 				p[0] = r * e[0];
 				p[1] = r * e[1];
 				p[2] = r * e[2];
 
-				xTex = (GLfloat)i / (GLfloat) n;
+				xTex = (n-i) / (GLfloat) n;
 				
 				glNormal3f(e[0],e[1],e[2]);
 				for (k = 0; k < kMaxTextureUnits; k++) {
@@ -538,9 +538,9 @@ static GLenum glReportErrorWithFileLine (char *file, int line)
 				}
 				glVertex3f(p[0],p[1],p[2]);
 
-				e[0] = cos(theta1) * cos(theta3);
-				e[1] = sin(theta1);
-				e[2] = cos(theta1) * sin(theta3);
+				e[0] = cos(theta2) * cos(theta3);
+				e[1] = sin(theta2);
+				e[2] = cos(theta2) * sin(theta3);
 				p[0] = r * e[0];
 				p[1] = r * e[1];
 				p[2] = r * e[2];
@@ -673,12 +673,63 @@ static GLenum glReportErrorWithFileLine (char *file, int line)
 			break;
 		case 3:
 			glDisable(GL_CULL_FACE);
+			glFrontFace(GL_CW);
 			glutSolidTeapot(2.0);
+			glFrontFace(GL_CCW);
 			glReportError ();
 			break;
 		case 4:
 			glDisable(GL_CULL_FACE);
 			glutWireTeapot(2.0);
+			glReportError ();
+			break;
+		case 5:
+		{
+			float v[][2] = {
+				{ -0.5, -1.0 },
+				{ -1.0, -0.5 },
+				{ -1.0,  0.5 },
+				{ -0.5,  1.0 },
+				{  0.5,  1.0 },
+				{  1.0,  0.5 },
+				{  1.0, -0.5 },
+				{  0.5, -1.0 },
+			};
+			unsigned char idx[] = {
+				7, 0, 1, 2,
+				0, 1, 2, 3,
+				1, 2, 3, 4,
+				2, 3, 4, 5,
+				3, 4, 5, 6,
+				4, 5, 6, 7,
+				5, 6, 7, 0,
+				6, 7, 0, 1,
+			};
+			int nverts = 8;
+
+
+ 			glVertexPointer(2, GL_FLOAT, 0, v);
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glDrawElements(GL_LINES_ADJACENCY_EXT, nverts*4, GL_UNSIGNED_BYTE, idx);
+			glDisableClientState(GL_VERTEX_ARRAY);
+			
+			glReportError ();
+			break;
+		}
+		case 6:
+		/*
+			glBegin(GL_POINTS);
+			glVertex3f(0,0,0);
+			glVertex3f( 1,0,0);
+			glVertex3f(-1,0,0);
+			glVertex3f(0, 1,0);
+			glVertex3f(0,-1,0);
+			glVertex3f(0,0, 1);
+			glVertex3f(0,0,-1);
+			glEnd();
+		*/
+			glDisable(GL_CULL_FACE);
+			glutPointTeapot(2.0);
 			glReportError ();
 			break;
 	}
@@ -757,7 +808,10 @@ static GLenum glReportErrorWithFileLine (char *file, int line)
         glPixelMapfv(GL_PIXEL_MAP_B_TO_B, 1, &zero);
         glPixelMapfv(GL_PIXEL_MAP_A_TO_A, 1, &zero);
         
-        glPixelStorei(GL_PACK_SWAP_BYTES, 0);
+		if (NS_LittleEndian == NSHostByteOrder())
+			glPixelStorei(GL_PACK_SWAP_BYTES, 1);
+		else
+			glPixelStorei(GL_PACK_SWAP_BYTES, 0);
         glPixelStorei(GL_PACK_LSB_FIRST, 0);
         glPixelStorei(GL_PACK_IMAGE_HEIGHT, 0);
         glPixelStoref(GL_PACK_ROW_LENGTH, NSWidth(srcRect)); 
@@ -798,29 +852,30 @@ static GLenum glReportErrorWithFileLine (char *file, int line)
 
 static void flipAndfixUpAlphaComponents(NSBitmapImageRep *imageRep)
 {
-        register unsigned char * sp = [imageRep bitmapData];
-        register int bytesPerRow = [imageRep bytesPerRow];
-        register int height = [imageRep pixelsHigh];
-        register int width = [imageRep pixelsWide];
-    
-        while (height > 1) { // top half mirrored to bottom
-            register unsigned int * pt = (unsigned int *) sp;
-            register unsigned int * pb = (unsigned int *) (sp + (height - 1) * bytesPerRow) ;
-            register int w = width;
-            while (w-- > 0) {
-                unsigned int tmp = *pt | 0x000000FF;
-                *pt++ = *pb | 0x000000FF;
-                *pb++ = tmp;
-            }
-            sp += bytesPerRow;
-            height -= 2;
-        }
-        if (height) { // middle row
-            register int w = width;
-			register unsigned int * pt = (unsigned int *) sp;
-            while (w-- > 0) 
-                *pt++ |= 0x000000FF;
-        }
+	unsigned char * sp = [imageRep bitmapData];
+	int bytesPerRow = [imageRep bytesPerRow];
+	int height = [imageRep pixelsHigh];
+	int width = [imageRep pixelsWide];
+	unsigned int alphaMask = (NS_LittleEndian == NSHostByteOrder()) ? 0xFF000000 : 0x000000FF;
+
+	while (height > 1) { // top half mirrored to bottom
+		unsigned int * pt = (unsigned int *) sp;
+		unsigned int * pb = (unsigned int *) (sp + (height - 1) * bytesPerRow) ;
+		int w = width;
+		while (w-- > 0) {
+			unsigned int tmp = *pt | alphaMask;
+			*pt++ = *pb | alphaMask;
+			*pb++ = tmp;
+		}
+		sp += bytesPerRow;
+		height -= 2;
+	}
+	if (height) { // middle row
+		int w = width;
+		unsigned int * pt = (unsigned int *) sp;
+		while (w-- > 0) 
+			*pt++ |= alphaMask;
+	}
 }
 
 // ---------------------------------
@@ -1332,9 +1387,11 @@ static BOOL writeDataToFile(NSData *data, NSString *path, OSType hfsType)
 		[self drawShape:drawObject]; // draw scene
 			
 		glReportError ();
-		if ([self inLiveResize] && !fAnimate)
-			glFlush ();
-		else
+		
+		// Charlie: needs to calll flush buffer since it is a double buffer ctx
+		//if ([self inLiveResize] && !fAnimate)
+		//	glFlush ();
+		//else
 			[[self openGLContext] flushBuffer];
 		glReportError ();
 		
@@ -1344,10 +1401,7 @@ static BOOL writeDataToFile(NSData *data, NSString *path, OSType hfsType)
 		// clear our drawable
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glReportError ();
-		if ([self inLiveResize] && !fAnimate)
-			glFlush ();
-		else
-			[[self openGLContext] flushBuffer];
+		[[self openGLContext] flushBuffer];
 	}
 
 	if (fChangingRenderers) {
@@ -1362,7 +1416,7 @@ static BOOL writeDataToFile(NSData *data, NSString *path, OSType hfsType)
 		CGLGetParameter (CGLGetCurrentContext(), kCGLCPGPUFragmentProcessing, &fragmentGPUProcessing);
 		if (prevVertex != vertexGPUProcessing || prevFragment != fragmentGPUProcessing || fChangingRenderers)
 			[controller updateProcessingWithVertex:vertexGPUProcessing withFragment:fragmentGPUProcessing withRenderer:(char *)glGetString (GL_RENDERER)];
-		[controller performSelector:@selector(updateControlStrings)  withObject:NULL afterDelay:0.0];
+		[controller updateControlStrings];
 	}
 	fChangingRenderers = NO;
 }
@@ -1402,7 +1456,7 @@ static BOOL writeDataToFile(NSData *data, NSString *path, OSType hfsType)
 {
 	if (NO == fGLInit) {
 		int i;
-		long swapInt = 1;
+		GLint swapInt = 1;
 		BOOL firstPass = NO;
 		fGLInit = YES; // do not init gl again for this context
 		if (NULL == multiTexNames) // if we are here for the first time

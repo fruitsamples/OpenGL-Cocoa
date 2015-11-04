@@ -183,15 +183,14 @@ Abstract: Exhibit base class.  Subclass this to create
 		GLint fragmentGPUProcessing, vertexGPUProcessing;
 		gpuProcessingInit = YES;
 
-		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0,0,0,0);
-		glPushMatrix();
-		[self renderFrame];
-		glPopMatrix();
+		glUseProgramObjectARB(program_object);
+
 		CGLGetParameter(CGLGetCurrentContext(), kCGLCPGPUFragmentProcessing, &fragmentGPUProcessing);
 		CGLGetParameter(CGLGetCurrentContext(), kCGLCPGPUVertexProcessing, &vertexGPUProcessing);
+
+		glUseProgramObjectARB(NULL);
+
 		gpuProcessing = (fragmentGPUProcessing && vertexGPUProcessing) ? YES : NO;
-		glPopAttrib();
 	}
 
 	return gpuProcessing;

@@ -46,7 +46,7 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import <OpenGL/gl.h>
+#import "EXTOpenGL.h"
 
 
 @interface uniformValue : NSObject <NSCoding> {

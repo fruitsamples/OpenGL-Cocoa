@@ -71,8 +71,16 @@ typedef struct _Parameter {
 #define PARAMETER_CURRENT(p)    (p.current)
 #define PARAMETER_ANIMATE(p)    ({ int i; for (i = 0; i < 4; i ++) { \
 											p.current[i] += p.delta[i]; \
-											if ((p.current[i] < p.min[i]) || (p.current[i] > p.max[i])) \
-												p.delta[i] = -p.delta[i]; } } )
+											if (p.current[i] <= p.min[i]) { \
+												p.current[i] = p.min[i]; \
+												p.delta[i] = -p.delta[i]; \
+											} \
+											else if (p.current[i] >= p.max[i]) { \
+												p.current[i] = p.max[i]; \
+												p.delta[i] = -p.delta[i]; \
+											} \
+										} \
+									})
 												
 /* Exhibit base class */
 @interface Exhibit : NSObject {

@@ -42,9 +42,8 @@
 
  */
 
-#import <OpenGL/gl.h>
-#import <OpenGL/glext.h>
-#import <OpenGL/glu.h>
+#import "EXTOpenGL.h"
 
 void glutSolidTeapot(GLdouble scale);
 void glutWireTeapot(GLdouble scale);
+void glutPointTeapot(GLdouble scale);

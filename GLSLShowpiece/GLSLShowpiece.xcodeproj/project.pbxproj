@@ -193,6 +193,7 @@
 		4E0E469A09EE179F00BB12D2 /* Wood2.vert in Resources */ = {isa = PBXBuildFile; fileRef = 4E0E45CE09EE179F00BB12D2 /* Wood2.vert */; };
 		4E0E469C09EE179F00BB12D2 /* WoodShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E0E45D109EE179F00BB12D2 /* WoodShader.h */; };
 		4E0E469D09EE179F00BB12D2 /* WoodShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0E45D209EE179F00BB12D2 /* WoodShader.m */; };
+		4E14A5850A002A50004154E8 /* Life.vert in Resources */ = {isa = PBXBuildFile; fileRef = 4E14A5840A002A50004154E8 /* Life.vert */; };
 		4E5EADA509F0A23B001D2FC3 /* Alien.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5EAD9909F0A23B001D2FC3 /* Alien.cpp */; };
 		4E5EADA609F0A23B001D2FC3 /* Alien.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5EAD9A09F0A23B001D2FC3 /* Alien.h */; };
 		4E5EADA709F0A23B001D2FC3 /* BlobbyCloudSupport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5EAD9B09F0A23B001D2FC3 /* BlobbyCloudSupport.cpp */; };
@@ -257,32 +258,6 @@
 		F006116709F87FFF00768753 /* Plasma.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F006116209F87FFF00768753 /* Plasma.rtf */; };
 		F006116809F87FFF00768753 /* Plasma.vert in Resources */ = {isa = PBXBuildFile; fileRef = F006116309F87FFF00768753 /* Plasma.vert */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXBuildStyle section */
-		4A9504CCFFE6A4B311CA0CBA /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				OPTIMIZATION_CFLAGS = "-O0";
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		4A9504CDFFE6A4B311CA0CBA /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-/* End PBXBuildStyle section */
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -481,6 +456,7 @@
 		4E0E45CE09EE179F00BB12D2 /* Wood2.vert */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Wood2.vert; sourceTree = "<group>"; };
 		4E0E45D109EE179F00BB12D2 /* WoodShader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WoodShader.h; path = Exhibits/WoodShader/WoodShader.h; sourceTree = "<group>"; };
 		4E0E45D209EE179F00BB12D2 /* WoodShader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = WoodShader.m; path = Exhibits/WoodShader/WoodShader.m; sourceTree = "<group>"; };
+		4E14A5840A002A50004154E8 /* Life.vert */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Life.vert; sourceTree = "<group>"; };
 		4E5EAD9909F0A23B001D2FC3 /* Alien.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Alien.cpp; sourceTree = "<group>"; };
 		4E5EAD9A09F0A23B001D2FC3 /* Alien.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Alien.h; sourceTree = "<group>"; };
 		4E5EAD9B09F0A23B001D2FC3 /* BlobbyCloudSupport.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = BlobbyCloudSupport.cpp; sourceTree = "<group>"; };
@@ -845,6 +821,7 @@
 		4E0E455F09EE179F00BB12D2 /* Life */ = {
 			isa = PBXGroup;
 			children = (
+				4E14A5840A002A50004154E8 /* Life.vert */,
 				4E0E456109EE179F00BB12D2 /* Life.h */,
 				4E0E456209EE179F00BB12D2 /* Life.m */,
 				4E0E456009EE179F00BB12D2 /* Life.frag */,
@@ -1352,25 +1329,6 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "";
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = GLSLShowpiece;
-				SECTORDER_FLAGS = "";
-				WRAPPER_EXTENSION = app;
-			};
 			dependencies = (
 			);
 			name = GLSLShowpiece;
@@ -1385,15 +1343,12 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = F0EC257108BBC88C006E9215 /* Build configuration list for PBXProject "GLSLShowpiece" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				4A9504CCFFE6A4B311CA0CBA /* Development */,
-				4A9504CDFFE6A4B311CA0CBA /* Deployment */,
-			);
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* GLSLShowpiece */;
 			projectDirPath = "";
+			projectRoot = "";
+			shouldCheckCompatibility = 1;
 			targets = (
 				8D1107260486CEB800E47090 /* GLSLShowpiece */,
 			);
@@ -1544,6 +1499,7 @@
 				76F07E6B09F8EA28000EA447 /* Toyball.rtf in Resources */,
 				76F07E6C09F8EA28000EA447 /* Toyball.vert in Resources */,
 				9B35BC6F09FD65DF00C69494 /* ParticleWave.rtf in Resources */,
+				4E14A5850A002A50004154E8 /* Life.vert in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1633,41 +1589,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		8EF3EFC309EF71690027E4FC /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = GLSLShowpiece;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Default;
-		};
-		8EF3EFC409EF71690027E4FC /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-			};
-			name = Default;
-		};
 		F0EC256E08BBC88C006E9215 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1749,20 +1670,18 @@
 			buildConfigurations = (
 				F0EC256E08BBC88C006E9215 /* Debug */,
 				F0EC256F08BBC88C006E9215 /* Release */,
-				8EF3EFC309EF71690027E4FC /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Release;
 		};
 		F0EC257108BBC88C006E9215 /* Build configuration list for PBXProject "GLSLShowpiece" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0EC257208BBC88C006E9215 /* Debug */,
 				F0EC257308BBC88C006E9215 /* Release */,
-				8EF3EFC409EF71690027E4FC /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

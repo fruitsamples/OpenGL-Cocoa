@@ -56,7 +56,7 @@ enum {
 
 @interface GLSLController : NSObject
 {
-	NSTabView *tabView;
+	IBOutlet NSTabView *tabView;
 	NSString *resultsString;
 	NSString *logString;
 	
@@ -151,6 +151,10 @@ enum {
 	GLenum currentUniformType;
 	GLint currentUniformSize;
 	int currentLocation;
+
+	IBOutlet NSSlider* geomVerticesOut;
+	IBOutlet NSPopUpButton* geomInputType;
+	IBOutlet NSPopUpButton* geomOutputType;
 }
 
 - (NSTextField *) linkResultTextField;
@@ -213,5 +217,13 @@ enum {
 - (void)shaderRedraw; // redraw if shader is being used, should be called after re-link or uniform change
 
 - (void) invalidateObjects; // called to invalidate all shader and program objects on renderer change
+
+- (IBAction)geomVerticesOutChange:(id)sender;
+- (IBAction)geomInputTypeChange:(id)sender;
+- (IBAction)geomOutputTypeChange:(id)sender;
+
+- (NSSlider*)geomVerticesOut;
+- (NSPopUpButton*)geomInputType;
+- (NSPopUpButton*)geomOutputType;
 
 @end

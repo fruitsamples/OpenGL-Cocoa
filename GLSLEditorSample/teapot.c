@@ -199,3 +199,8 @@ void glutWireTeapot(GLdouble scale)
 {
   teapot(3, scale, GL_LINE);
 }
+
+void glutPointTeapot(GLdouble scale)
+{
+  teapot(3, scale, GL_POINT);
+}

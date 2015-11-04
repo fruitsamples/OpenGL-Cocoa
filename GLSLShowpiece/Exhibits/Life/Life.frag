@@ -1,13 +1,12 @@
 uniform vec4 pixelDimension;
 uniform sampler2D currentGeneration;
 
+varying vec4 lrud;
+varying vec3 lry;
+varying vec3 xud;
+
 void main()
 {
-	vec4 lrud = gl_TexCoord[0].xxyy;
-	lrud += pixelDimension;
-	vec3 lry = vec3(lrud.xy, gl_TexCoord[0].y);
-	vec3 xud = vec3(gl_TexCoord[0].x, lrud.zw);
-
 	// read current state of cell
 	vec3 currentCell = texture2D(currentGeneration, gl_TexCoord[0].xy).rgb;
 	
@@ -35,4 +34,5 @@ void main()
 	currentCell.rgb -= vec3(greaterThan(currentCell, vec3(0.2))) * 0.01;
 
 	gl_FragColor = vec4(currentCell.rgb, 1);
+
 }

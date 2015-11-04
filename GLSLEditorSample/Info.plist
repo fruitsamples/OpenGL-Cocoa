@@ -27,6 +27,24 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+				<string>gsh</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string></string>
+			<key>CFBundleTypeName</key>
+			<string>GeometryShaderType</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>????</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>NSDocumentClass</key>
+			<string>MyDocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
 				<string>fsh</string>
 			</array>
 			<key>CFBundleTypeName</key>
@@ -47,6 +65,22 @@
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>VertShaderType</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>????</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>NSDocumentClass</key>
+			<string>MyDocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>geom</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>GeomShaderType</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>????</string>

@@ -258,6 +258,12 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_FLOAT_MAT2_ARB:
 		case GL_FLOAT_MAT3_ARB:
 		case GL_FLOAT_MAT4_ARB:
+		case GL_FLOAT_MAT2x3:
+		case GL_FLOAT_MAT2x4:
+		case GL_FLOAT_MAT3x2:
+		case GL_FLOAT_MAT3x4:
+		case GL_FLOAT_MAT4x2:
+		case GL_FLOAT_MAT4x3:
 			[currentUniformValue setCurrentVal:[uniformXSlider floatValue] atIndex:0 + currentMatrixStride * matrixColumn];
 			[uniformXValue setStringValue:[NSString stringWithFormat:@"%0.3f", [uniformXSlider floatValue]]];
 			if  ([uniformYValue isEnabled]) {
@@ -425,6 +431,12 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_FLOAT_MAT2_ARB:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT2_ARB"]; break;
 		case GL_FLOAT_MAT3_ARB:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT3_ARB"]; break;
 		case GL_FLOAT_MAT4_ARB:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT4_ARB"]; break;
+		case GL_FLOAT_MAT2x3:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT2x3"]; break;
+		case GL_FLOAT_MAT2x4:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT2x4"]; break;
+		case GL_FLOAT_MAT3x2:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT3x2"]; break;
+		case GL_FLOAT_MAT3x4:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT3x4"]; break;
+		case GL_FLOAT_MAT4x2:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT4x2"]; break;
+		case GL_FLOAT_MAT4x3:  finalString = [finalString stringByAppendingString:@"GL_FLOAT_MAT4x3"]; break;
 		case GL_SAMPLER_1D_ARB:  finalString = [finalString stringByAppendingString:@"GL_SAMPLER_1D_ARB"]; break;
 		case GL_SAMPLER_2D_ARB:  finalString = [finalString stringByAppendingString:@"GL_SAMPLER_2D_ARB"]; break;
 		case GL_SAMPLER_3D_ARB:  finalString = [finalString stringByAppendingString:@"GL_SAMPLER_3D_ARB"]; break;
@@ -461,8 +473,6 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_SAMPLER_2D_SHADOW_ARB:
 		case GL_SAMPLER_2D_RECT_ARB:
 		case GL_SAMPLER_2D_RECT_SHADOW_ARB:
-			currentMatrixStride = 1;
-
 			[uniformYValue setEnabled:false];
 			[uniformYMin setEnabled:false];
 			[uniformYMax setEnabled:false];
@@ -482,8 +492,9 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_INT_VEC2_ARB:
 		case GL_BOOL_VEC2_ARB:
 		case GL_FLOAT_MAT2_ARB:
-			currentMatrixStride = 2;
-
+		case GL_FLOAT_MAT3x2:
+		case GL_FLOAT_MAT4x2:
+			currentMatrixStride = 2; // rows
 			[uniformYValue setEnabled:[useShaderButton state]];
 			[uniformYMin setEnabled:[useShaderButton state]];
 			[uniformYMax setEnabled:[useShaderButton state]];
@@ -503,8 +514,9 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_INT_VEC3_ARB:
 		case GL_BOOL_VEC3_ARB:
 		case GL_FLOAT_MAT3_ARB:
-			currentMatrixStride = 3;
-
+		case GL_FLOAT_MAT2x3:
+		case GL_FLOAT_MAT4x3:
+			currentMatrixStride = 3; // rows
 			[uniformYValue setEnabled:[useShaderButton state]];
 			[uniformYMin setEnabled:[useShaderButton state]];
 			[uniformYMax setEnabled:[useShaderButton state]];
@@ -524,8 +536,9 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_INT_VEC4_ARB:
 		case GL_BOOL_VEC4_ARB:
 		case GL_FLOAT_MAT4_ARB:
-			currentMatrixStride = 4;
-
+		case GL_FLOAT_MAT2x4:
+		case GL_FLOAT_MAT3x4:
+			currentMatrixStride = 4; // rows
 			[uniformYValue setEnabled:[useShaderButton state]];
 			[uniformYMin setEnabled:[useShaderButton state]];
 			[uniformYMax setEnabled:[useShaderButton state]];
@@ -545,14 +558,16 @@ NSString *gUniformValueKey = @"Uniform Values";
 	[uniformColumnPopUp removeAllItems];
 	switch (currentUniformType) { // get type in text form
 		case GL_FLOAT_MAT2_ARB:
-			currentMatrixStride = 2;
+		case GL_FLOAT_MAT2x3:
+		case GL_FLOAT_MAT2x4:
 			[uniformColumnPopUp addItemWithTitle:@"0"];
 			[uniformColumnPopUp addItemWithTitle:@"1"];
 			[uniformColumnPopUp setEnabled:[useShaderButton state]];
 			[uniformColumnPopUp selectItemAtIndex: matrixColumn];
 			break;
 		case GL_FLOAT_MAT3_ARB:
-			currentMatrixStride = 3;
+		case GL_FLOAT_MAT3x2:
+		case GL_FLOAT_MAT3x4:
 			[uniformColumnPopUp addItemWithTitle:@"0"];
 			[uniformColumnPopUp addItemWithTitle:@"1"];
 			[uniformColumnPopUp addItemWithTitle:@"2"];
@@ -560,7 +575,8 @@ NSString *gUniformValueKey = @"Uniform Values";
 			[uniformColumnPopUp selectItemAtIndex: matrixColumn];
 			break;
 		case GL_FLOAT_MAT4_ARB:
-			currentMatrixStride = 4;
+		case GL_FLOAT_MAT4x2:
+		case GL_FLOAT_MAT4x3:
 			[uniformColumnPopUp addItemWithTitle:@"0"];
 			[uniformColumnPopUp addItemWithTitle:@"1"];
 			[uniformColumnPopUp addItemWithTitle:@"2"];
@@ -569,7 +585,7 @@ NSString *gUniformValueKey = @"Uniform Values";
 			[uniformColumnPopUp selectItemAtIndex: matrixColumn];
 			break;
 		default:
-			currentMatrixStride = 0;
+			currentMatrixStride = 0; // not matrix turn it off...
 			[uniformColumnPopUp setEnabled:false];
 			break;
 	}
@@ -586,6 +602,8 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_SAMPLER_2D_RECT_ARB:
 		case GL_SAMPLER_2D_RECT_SHADOW_ARB:
 		case GL_FLOAT_MAT2_ARB:
+		case GL_FLOAT_MAT3x2:
+		case GL_FLOAT_MAT4x2:
 		case GL_FLOAT_VEC2_ARB:
 		case GL_INT_VEC2_ARB:
 		case GL_BOOL_VEC2_ARB:
@@ -599,6 +617,10 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_FLOAT_VEC3_ARB:
 		case GL_FLOAT_MAT3_ARB:
 		case GL_FLOAT_MAT4_ARB:
+		case GL_FLOAT_MAT2x3:
+		case GL_FLOAT_MAT2x4:
+		case GL_FLOAT_MAT3x4:
+		case GL_FLOAT_MAT4x3:
 			[uniformColor setEnabled:[useShaderButton state]];
 			break;
 		default:
@@ -653,6 +675,12 @@ NSString *gUniformValueKey = @"Uniform Values";
 		case GL_FLOAT_MAT2_ARB:
 		case GL_FLOAT_MAT3_ARB:
 		case GL_FLOAT_MAT4_ARB:
+		case GL_FLOAT_MAT2x3:
+		case GL_FLOAT_MAT2x4:
+		case GL_FLOAT_MAT3x2:
+		case GL_FLOAT_MAT3x4:
+		case GL_FLOAT_MAT4x2:
+		case GL_FLOAT_MAT4x3:
 			[uniformXValue setStringValue:[NSString stringWithFormat:@"%0.3f", [currentUniformValue getCurrentValAtIndex:0 + currentMatrixStride * matrixColumn]]];
 			[uniformXSlider setFloatValue: [currentUniformValue getCurrentValAtIndex:0 + currentMatrixStride * matrixColumn]];
 			[uniformXSlider setNumberOfTickMarks:0];
@@ -813,94 +841,212 @@ NSString *gUniformValueKey = @"Uniform Values";
 // these are called from the parser with the actual values queried
 - (void) setUniformFloatData:(GLfloat *)fVal
 {
-	switch (currentUniformType) { // get type in text form
-		case GL_FLOAT: 
-		case GL_INT:
-		case GL_BOOL_ARB:
-		case GL_SAMPLER_1D_ARB:
-		case GL_SAMPLER_2D_ARB:
-		case GL_SAMPLER_3D_ARB:
-		case GL_SAMPLER_CUBE_ARB:
-		case GL_SAMPLER_1D_SHADOW_ARB:
-		case GL_SAMPLER_2D_SHADOW_ARB:
-		case GL_SAMPLER_2D_RECT_ARB:
-		case GL_SAMPLER_2D_RECT_SHADOW_ARB:
-			[uniformFloatResult setStringValue:[NSString stringWithFormat:@"(%f)", fVal[0]]];
-			break;
-		case GL_FLOAT_VEC2_ARB:
-		case GL_INT_VEC2_ARB:
-		case GL_BOOL_VEC2_ARB:
-			[uniformFloatResult setStringValue:[NSString stringWithFormat:@"(%f, %f)", fVal[0], fVal[1]]];
-			break;
-		case GL_FLOAT_VEC3_ARB:
-		case GL_INT_VEC3_ARB:
-		case GL_BOOL_VEC3_ARB:
-			[uniformFloatResult setStringValue:[NSString stringWithFormat:@"(%f, %f, %f)", fVal[0], fVal[1], fVal[2]]];
-			break;
-		case GL_FLOAT_VEC4_ARB:
-		case GL_INT_VEC4_ARB:
-		case GL_BOOL_VEC4_ARB:
-			[uniformFloatResult setStringValue:[NSString stringWithFormat:@"(%f, %f, %f, %f)", fVal[0], fVal[1], fVal[2], fVal[3]]];
-			break;
-		case GL_FLOAT_MAT2_ARB:
-			[uniformFloatResult setStringValue:[NSString stringWithFormat:@"(%0.3f, %0.3f)\n(%0.3f, %0.3f)", fVal[0], fVal[2], fVal[1], fVal[3]]];
-			break;
-		case GL_FLOAT_MAT3_ARB:
-			[uniformFloatResult setStringValue:[NSString stringWithFormat:@"(%0.3f, %0.3f, %0.3f)\n(%0.3f, %0.3f, %0.3f)\n(%0.3f, %0.3f, %0.3f)", fVal[0], fVal[3], fVal[6], fVal[1], fVal[4], fVal[7], fVal[2], fVal[5], fVal[8]]];
-			break;
-		case GL_FLOAT_MAT4_ARB:
-			[uniformFloatResult setStringValue:[NSString stringWithFormat:@"(%0.3f, %0.3f, %0.3f, %0.3f)\n(%0.3f, %0.3f, %0.3f, %0.3f)\n(%0.3f, %0.3f, %0.3f, %0.3f)\n(%0.3f, %0.3f, %0.3f, %0.3f)", fVal[0], fVal[4], fVal[8], fVal[12], fVal[1], fVal[5], fVal[9], fVal[13], fVal[2], fVal[6], fVal[10], fVal[14], fVal[3], fVal[7], fVal[11], fVal[15]]];
-			break;
-		default:
-			break;
+	BOOL matrix = NO;
+	int cols = 0;
+	int rows = 0;
+	switch (currentUniformType)
+	{ // get type in text form
+	case GL_FLOAT: 
+	case GL_INT:
+	case GL_BOOL_ARB:
+	case GL_SAMPLER_1D_ARB:
+	case GL_SAMPLER_2D_ARB:
+	case GL_SAMPLER_3D_ARB:
+	case GL_SAMPLER_CUBE_ARB:
+	case GL_SAMPLER_1D_SHADOW_ARB:
+	case GL_SAMPLER_2D_SHADOW_ARB:
+	case GL_SAMPLER_2D_RECT_ARB:
+	case GL_SAMPLER_2D_RECT_SHADOW_ARB:
+		matrix = NO;
+		cols = 1;
+		rows = 1;
+		break;
+	case GL_FLOAT_VEC2_ARB:
+	case GL_INT_VEC2_ARB:
+	case GL_BOOL_VEC2_ARB:
+		matrix = NO;
+		cols = 1;
+		rows = 2;
+		break;
+	case GL_FLOAT_VEC3_ARB:
+	case GL_INT_VEC3_ARB:
+	case GL_BOOL_VEC3_ARB:
+		matrix = NO;
+		cols = 1;
+		rows = 3;
+		break;
+	case GL_FLOAT_VEC4_ARB:
+	case GL_INT_VEC4_ARB:
+	case GL_BOOL_VEC4_ARB:
+		matrix = NO;
+		cols = 1;
+		rows = 4;
+		break;
+	case GL_FLOAT_MAT2_ARB:
+		matrix = YES;
+		cols = 2;
+		rows = 2;
+		break;
+	case GL_FLOAT_MAT3_ARB:
+		matrix = YES;
+		cols = 3;
+		rows = 3;
+		break;
+	case GL_FLOAT_MAT4_ARB:
+		matrix = YES;
+		cols = 4;
+		rows = 4;
+		break;
+	case GL_FLOAT_MAT2x3:
+		matrix = YES;
+		cols = 2;
+		rows = 3;
+		break;
+	case GL_FLOAT_MAT2x4:
+		matrix = YES;
+		cols = 2;
+		rows = 4;
+		break;
+	case GL_FLOAT_MAT3x2:
+		matrix = YES;
+		cols = 3;
+		rows = 2;
+		break;
+	case GL_FLOAT_MAT3x4:
+		matrix = YES;
+		cols = 3;
+		rows = 4;
+		break;
+	case GL_FLOAT_MAT4x2:
+		matrix = YES;
+		cols = 4;
+		rows = 2;
+		break;
+	case GL_FLOAT_MAT4x3:
+		matrix = YES;
+		cols = 4;
+		rows = 3;
+		break;
+	default:
+		break;
 	}
+	NSString* uniformString = [[NSString alloc] init];
+	int onCol;
+	for(onCol = 0; onCol < cols; onCol++)
+	{
+		uniformString = [uniformString stringByAppendingFormat:@"("];
+		int onRow;
+		for(onRow = 0; onRow < rows; onRow++)
+		{
+			if(matrix)
+				uniformString = [uniformString stringByAppendingFormat:@"%0.3f", fVal[onCol * rows + onRow]];
+			else
+				uniformString = [uniformString stringByAppendingFormat:@"%f", fVal[onCol * rows + onRow]];
+			if(onRow != rows - 1) // not last row
+				uniformString = [uniformString stringByAppendingFormat:@", "];
+		}
+		uniformString = [uniformString stringByAppendingFormat:@")"];
+		if(onCol != cols - 1) // not last col
+			uniformString = [uniformString stringByAppendingFormat:@"\n"];
+	}
+	[uniformFloatResult setStringValue:uniformString];
 } 
 
 - (void) setUniformIntData:(GLint *)iVal
 {
-	switch (currentUniformType) { // get type in text form
-		case GL_FLOAT: 
-		case GL_INT:
-		case GL_BOOL_ARB:
-		case GL_SAMPLER_1D_ARB:
-		case GL_SAMPLER_2D_ARB:
-		case GL_SAMPLER_3D_ARB:
-		case GL_SAMPLER_CUBE_ARB:
-		case GL_SAMPLER_1D_SHADOW_ARB:
-		case GL_SAMPLER_2D_SHADOW_ARB:
-		case GL_SAMPLER_2D_RECT_ARB:
-		case GL_SAMPLER_2D_RECT_SHADOW_ARB:
-			[uniformIntResult setStringValue:[NSString stringWithFormat:@"(%ld)", iVal[0]]];
-			break;
-		case GL_FLOAT_VEC2_ARB:
-		case GL_INT_VEC2_ARB:
-		case GL_BOOL_VEC2_ARB:
-			[uniformIntResult setStringValue:[NSString stringWithFormat:@"(%ld, %ld)", iVal[0], iVal[1]]];
-			break;
-		case GL_FLOAT_VEC3_ARB:
-		case GL_INT_VEC3_ARB:
-		case GL_BOOL_VEC3_ARB:
-			[uniformIntResult setStringValue:[NSString stringWithFormat:@"(%ld, %ld, %ld)", iVal[0], iVal[1], iVal[2]]];
-			break;
-		case GL_FLOAT_VEC4_ARB:
-		case GL_INT_VEC4_ARB:
-		case GL_BOOL_VEC4_ARB:
-			[uniformIntResult setStringValue:[NSString stringWithFormat:@"(%ld, %ld, %ld, %ld)", iVal[0], iVal[1], iVal[2], iVal[3]]];
-			break;
-		case GL_FLOAT_MAT2_ARB:
-			[uniformIntResult setStringValue:[NSString stringWithFormat:@"(%ld, %ld)\n(%ld, %ld)", iVal[0], iVal[2], iVal[1], iVal[3]]];
-			break;
-		case GL_FLOAT_MAT3_ARB:
-			[uniformIntResult setStringValue:[NSString stringWithFormat:@"(%ld, %ld, %ld)\n(%ld, %ld, %ld)\n(%ld, %ld, %ld)", iVal[0], iVal[3], iVal[6], iVal[1], iVal[4], iVal[7], iVal[2], iVal[5], iVal[8]]];
-			break;
-		case GL_FLOAT_MAT4_ARB:
-			[uniformIntResult setStringValue:[NSString stringWithFormat:@"(%ld, %ld, %ld, %ld)\n(%ld, %ld, %ld, %ld)\n(%ld, %ld, %ld, %ld)\n(%ld, %ld, %ld, %ld)",
-											  iVal[0], iVal[4], iVal[8], iVal[12], iVal[1], iVal[5], iVal[9], iVal[13], iVal[2], iVal[6], iVal[10], iVal[14], iVal[3], iVal[7], iVal[11], iVal[15]]];
-			break;
-		default:
-			break;
+	int cols = 0;
+	int rows = 0;
+	switch (currentUniformType)
+	{ // get type in text form
+	case GL_FLOAT: 
+	case GL_INT:
+	case GL_BOOL_ARB:
+	case GL_SAMPLER_1D_ARB:
+	case GL_SAMPLER_2D_ARB:
+	case GL_SAMPLER_3D_ARB:
+	case GL_SAMPLER_CUBE_ARB:
+	case GL_SAMPLER_1D_SHADOW_ARB:
+	case GL_SAMPLER_2D_SHADOW_ARB:
+	case GL_SAMPLER_2D_RECT_ARB:
+	case GL_SAMPLER_2D_RECT_SHADOW_ARB:
+		cols = 1;
+		rows = 1;
+		break;
+	case GL_FLOAT_VEC2_ARB:
+	case GL_INT_VEC2_ARB:
+	case GL_BOOL_VEC2_ARB:
+		cols = 1;
+		rows = 2;
+		break;
+	case GL_FLOAT_VEC3_ARB:
+	case GL_INT_VEC3_ARB:
+	case GL_BOOL_VEC3_ARB:
+		cols = 1;
+		rows = 3;
+		break;
+	case GL_FLOAT_VEC4_ARB:
+	case GL_INT_VEC4_ARB:
+	case GL_BOOL_VEC4_ARB:
+		cols = 1;
+		rows = 4;
+		break;
+	case GL_FLOAT_MAT2_ARB:
+		cols = 2;
+		rows = 2;
+		break;
+	case GL_FLOAT_MAT3_ARB:
+		cols = 3;
+		rows = 3;
+		break;
+	case GL_FLOAT_MAT4_ARB:
+		cols = 4;
+		rows = 4;
+		break;
+	case GL_FLOAT_MAT2x3:
+		cols = 2;
+		rows = 3;
+		break;
+	case GL_FLOAT_MAT2x4:
+		cols = 2;
+		rows = 4;
+		break;
+	case GL_FLOAT_MAT3x2:
+		cols = 3;
+		rows = 2;
+		break;
+	case GL_FLOAT_MAT3x4:
+		cols = 3;
+		rows = 4;
+		break;
+	case GL_FLOAT_MAT4x2:
+		cols = 4;
+		rows = 2;
+		break;
+	case GL_FLOAT_MAT4x3:
+		cols = 4;
+		rows = 3;
+		break;
+	default:
+		break;
 	}
-} 
+	NSString* uniformString = [[NSString alloc] init];
+	int onCol;
+	for(onCol = 0; onCol < cols; onCol++)
+	{
+		uniformString = [uniformString stringByAppendingFormat:@"("];
+		int onRow;
+		for(onRow = 0; onRow < rows; onRow++)
+		{
+			uniformString = [uniformString stringByAppendingFormat:@"%ld", iVal[onCol * rows + onRow]];
+			if(onRow != rows - 1) // not last row
+				uniformString = [uniformString stringByAppendingFormat:@", "];
+		}
+		uniformString = [uniformString stringByAppendingFormat:@")"];
+		if(onCol != cols - 1) // not last col
+			uniformString = [uniformString stringByAppendingFormat:@"\n"];
+	}
+	[uniformIntResult setStringValue:uniformString];
+}
 
 //LIGHTS
 - (void)lightUpdate:(GLenum*)pLight:(GLenum*)pValueField
@@ -1192,7 +1338,11 @@ NSString *gUniformValueKey = @"Uniform Values";
 - (IBAction)link:(id)sender
 {
 	if (!terminating)
+	{
 		[parser link];
+		// to get around nasty bugs with state tracking in the app itself (e.g. when switching renderers)
+		[self useShader];
+	}
 }
 
 - (NSTextField *) linkResultTextField
@@ -1582,17 +1732,35 @@ NSString *gUniformValueKey = @"Uniform Values";
 		if ([doc respondsToSelector:@selector(invalidateShader)])
 			[(MyDocument*)doc invalidateShader];
 	}
-	if ([useShaderButton state])
-		[glView useShader:[parser getLinkedProgram]];
-	if ([unformPullDown isEnabled]) { // need to set all values here...
-		int i;
-		// first set all the unform values...  (need to walk menu and set)
-		for (i = 0; i < [unformPullDown numberOfItems]; i++) {
-			[parser setCurrentUniform:i]; // set every item in turn
-		}
-		// finally set selected uniform...
-		[parser setCurrentUniform:[unformPullDown indexOfSelectedItem]]; 
-	}
+	[self useShader];
+}
+
+- (IBAction)geomVerticesOutChange:(id)sender;
+{
+	[parser changedGeometryShader];
+}
+- (IBAction)geomInputTypeChange:(id)sender;
+{
+	[parser changedGeometryShader];
+}
+- (IBAction)geomOutputTypeChange:(id)sender;
+{
+	[parser changedGeometryShader];
+}
+
+- (NSSlider*)geomVerticesOut
+{
+	return geomVerticesOut;
+}
+
+- (NSPopUpButton*)geomInputType
+{
+	return geomInputType;
+}
+
+- (NSPopUpButton*)geomOutputType
+{
+	return geomOutputType;
 }
 
 @end

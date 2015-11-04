@@ -132,6 +132,7 @@ Abstract: Main user interface control class
 	
 	[openglview setExhibit: exhibit];
 	[text_view  readRTFDFromFile: [exhibit descriptionFilename]];
+	[NSApp setDelegate: self];
 }
 
 /* Following methods are for compliency with the NSTableDataSource protocol */
@@ -164,6 +165,10 @@ Abstract: Main user interface control class
 		[text_view readRTFDFromFile: [exhibit descriptionFilename]];
 	else
 		[text_view setString: @""];
+}
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)app {
+    return YES;
 }
 
 @end

@@ -1,10 +1,15 @@
-GLSLEditorSample Read Me: (13 March 2006)
+GLSLEditorSample Read Me: (21 May 2007)
+
+Build Requirements:
+    - No longer builds against the 10.4 sdk
+    - Requires OpenGL 2.1 with EXT_geometry_shader4 to link
 
 Application use:
 
 New shader files can be created or opened
     - .fsh and .frag are the supported fragment shader file extensions
-    - .vsh and .vert are the supported fragment shader file extensions
+    - .gsh and .geom are the supported geometry shader file extensions
+    - .vsh and .vert are the supported vertex   shader file extensions
     - Other file extension can be added to the sample in the target info
     - Note, an open file have a type determined by the popup menu which
       invocation of the proper compiler.
@@ -37,7 +42,7 @@ Once shaders are loaded or created they can be link and "Used"
       between application launches, enabling simpler set up for complex
       shaders.  Note, this is a feature of the sample and not one of the
       API, by definition, all uniform values are set to zero on link or
-      re-link.  Keep this in mind when developer shader programs.
+      re-link.  Keep this in mind when developing shader programs.
 Once the shader program is linked and in use the results will be shown
 in the "OpenGL Results" window.
     - Different surfaces can be displayed to test your shader and the

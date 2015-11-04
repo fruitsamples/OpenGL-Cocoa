@@ -52,11 +52,7 @@
 #import "MyDocument.h"
 #import "GLSLParser.h"
 
-#import <OpenGL/gl.h>
-#import <OpenGL/glext.h>
-#import <OpenGL/glu.h>
-
-#import <OpenGL/OpenGL.h>
+#import "EXTOpenGL.h"
 
 
 @implementation MyDocument 
@@ -321,7 +317,7 @@ static GLSLParser * parser;
 	[keyWords setObject: colorBuiltInFunctions forKey: @"noise2"];
 	[keyWords setObject: colorBuiltInFunctions forKey: @"noise3"];
 	[keyWords setObject: colorBuiltInFunctions forKey: @"noise4"];
-	
+
 	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FrontColor"];
 	[keyWords setObject: colorBuiltInVariables forKey: @"gl_BackColor"];
 	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FrontSecondaryColor"];
@@ -419,6 +415,66 @@ static GLSLParser * parser;
 	[keyWords setObject: colorPreProcessor forKey: @"__LINE__"];
 	[keyWords setObject: colorPreProcessor forKey: @"__FILE__"];
 	[keyWords setObject: colorPreProcessor forKey: @"__VERSION_"];
+
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_ObjectPlaneT"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_ObjectPlaneR"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_Fog"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FrontFacing"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FragCoord"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FragColor"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FragDepth"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FragData"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_Position"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_PointSize"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_ClipVertex"];
+
+	//ARB_texture_rectangle keywords
+	[keyWords setObject: colorBuiltInVariables forKey: @"GL_ARB_texture_rectangle"];
+
+	//ARB_shader_texture_lod keywords
+	[keyWords setObject: colorBuiltInVariables forKey: @"GL_ARB_shader_texture_lod"];
+
+	//EXT_bindable_uniform keywords
+	[keyWords setObject: colorKeywords forKey: @"bindable"];
+
+	[keyWords setObject: colorBuiltInVariables forKey: @"GL_EXT_bindable_uniform"];
+
+	//EXT_geometry_shader4 keywords
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FrontColorIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_BackColorIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FrontSecondaryColorIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_BackSecondaryColorIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_TexCoordIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_FogFragCoordIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_PositionIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_PointSizeIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_ClipVertexIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_VerticesIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_PrimitiveIDIn"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_PrimitiveID"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_Layer"];
+	[keyWords setObject: colorBuiltInVariables forKey: @"GL_EXT_geometry_shader4"];
+
+	//GLSL120 keywords
+	[keyWords setObject: colorReserved forKey: @"lowp"];
+	[keyWords setObject: colorReserved forKey: @"mediump"];
+	[keyWords setObject: colorReserved forKey: @"highp"];
+	[keyWords setObject: colorReserved forKey: @"precision"];
+
+	[keyWords setObject: colorKeywords forKey: @"invariant"];
+	[keyWords setObject: colorKeywords forKey: @"centroid"];
+
+	[keyWords setObject: colorDatatypes forKey: @"mat2x2"];
+	[keyWords setObject: colorDatatypes forKey: @"mat2x3"];
+	[keyWords setObject: colorDatatypes forKey: @"mat2x4"];
+	[keyWords setObject: colorDatatypes forKey: @"mat3x2"];
+	[keyWords setObject: colorDatatypes forKey: @"mat3x3"];
+	[keyWords setObject: colorDatatypes forKey: @"mat3x4"];
+	[keyWords setObject: colorDatatypes forKey: @"mat4x2"];
+	[keyWords setObject: colorDatatypes forKey: @"mat4x3"];
+	[keyWords setObject: colorDatatypes forKey: @"mat4x4"];
+
+	[keyWords setObject: colorBuiltInVariables forKey: @"gl_PointCoord"];
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *) aController
@@ -446,10 +502,14 @@ static GLSLParser * parser;
 		(NSOrderedSame == [typeString compare:@"VertShaderType"])) {
 		language = GL_VERTEX_SHADER_ARB;
 		[languagePopUp selectItemAtIndex:0];
+	} else if ((NSOrderedSame == [typeString compare:@"GeomShaderType"]) || 
+			   (NSOrderedSame == [typeString compare:@"GeometryShaderType"])) {
+		language = GL_GEOMETRY_SHADER_EXT;
+		[languagePopUp selectItemAtIndex:1];
 	} else if ((NSOrderedSame == [typeString compare:@"FragShaderType"]) || 
 			   (NSOrderedSame == [typeString compare:@"FragmentShaderType"])) {
 		language = GL_FRAGMENT_SHADER_ARB;
-		[languagePopUp selectItemAtIndex:1];
+		[languagePopUp selectItemAtIndex:2];
 	} else { // unknown, thus must be set
 		[self setFileType:@"VertexShaderType"];
 		language = GL_VERTEX_SHADER_ARB;
@@ -474,7 +534,7 @@ static GLSLParser * parser;
  	if (!originalString) {
 		if (language == GL_VERTEX_SHADER_ARB)
 			[self setOriginalString :@"uniform vec3 inColor;\nvarying vec3 outColor;\n\nvoid main()\n{\n    outColor = inColor;\n\n    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n}\n"];
-		else 
+		else if (language == GL_FRAGMENT_SHADER_ARB)
 			[self setOriginalString :@"varying vec3 outColor;\n\nvoid main()\n{\n    gl_FragColor = vec4(outColor, 1.0);\n}\n"];
 	}
 	NSAttributedString * string = [[NSAttributedString alloc] initWithString:@"----" attributes:stanStringAttrib];
@@ -527,6 +587,7 @@ static GLSLParser * parser;
 	NSRange selection = [originalTextView selectedRange];
 	int selectionPoint = selection.location + selection.length;
 	long  i = 0;
+//NSUInteger??
 	unsigned start = 0, nextStart = 0, end = 0;
 	NSRange range = NSMakeRange (nextStart, 0);
 	do { // while end is not in range
@@ -717,46 +778,6 @@ static GLSLParser * parser;
 	[string release];
 }
 
-// returns index of character after token or 0 if token not found.
-
-static long StepToToken (const char * source, char * token)
-{
-	Boolean fStartToken = false, fEndToken = false;
-	char c;
-	short posToken = 0, lenToken = (short) strlen (token);
-	long index = 0;
-	
-	do
-	{
-		c = *(source + index++);
-		if (fStartToken) {
-			if ((c == *(token + posToken)) ||
-				((*(token + posToken) == '\r') && (c == '\n')) ||
-				((*(token + posToken) == '\n') && (c == '\r'))) {  // if we are equal to current token char
-				posToken++;
-				if (posToken == lenToken) // are we done
-					fEndToken = true;
-			} else { // no match, so copy current matched chars and proceed
-				fStartToken = false;
-				posToken = 0;
-			}
-		} else {
-			if ((c == *(token + posToken)) ||
-				((*(token + posToken) == '\r') && (c == '\n')) ||
-				((*(token + posToken) == '\n') && (c == '\r'))) {  // if we are equal to current token char
-				posToken++;
-				fStartToken = true;
-				if (posToken == lenToken) // are we done
-					fEndToken = true;
-			}
-		}
-	}
-	while ((c != 0) && (!fEndToken));
-	if (c == 0)
-		return 0;
-	return index;
-}
-
 - (IBAction) changeAutoCompile: (id) sender
 {
 	if ([autoCompileCheckBox state]) // if we are auto compiling...
@@ -785,6 +806,7 @@ static long StepToToken (const char * source, char * token)
 		case 0:
 			if (language != GL_VERTEX_SHADER_ARB) {
 				if ((NSOrderedSame == [typeString compare:@"VertexShaderType"]) || 
+					(NSOrderedSame == [typeString compare:@"GeometryShaderType"]) || 
 					(NSOrderedSame == [typeString compare:@"FragmentShaderType"]))
 						[self setFileType:@"VertexShaderType"];
 				else 
@@ -802,8 +824,29 @@ static long StepToToken (const char * source, char * token)
 			}
 			break;
 		case 1:
+			if (language != GL_GEOMETRY_SHADER_EXT) {
+				if ((NSOrderedSame == [typeString compare:@"VertexShaderType"]) || 
+					(NSOrderedSame == [typeString compare:@"GeometryShaderType"]) || 
+					(NSOrderedSame == [typeString compare:@"FragmentShaderType"]))
+						[self setFileType:@"GeometryShaderType"];
+				else 
+						[self setFileType:@"GeomShaderType"];
+				language = GL_GEOMETRY_SHADER_EXT;
+				if (shader) { // must recreate shader on language change
+					[parser releaseShaderHandle: shader];
+				}
+				shader = 0;
+				status = -1; // the new text is not compiled
+				[compileText setStringValue:@"Not compiled."];
+				[compileText setBackgroundColor:[NSColor colorWithCalibratedRed:0.8f green:0.8f blue:1.0f alpha:1.0f]];
+				if ([autoCompileCheckBox state]) // if we are auto compiling...
+					[self process:self];
+			}
+			break;
+		case 2:
 			if (language != GL_FRAGMENT_SHADER_ARB) {
 				if ((NSOrderedSame == [typeString compare:@"VertexShaderType"]) || 
+					(NSOrderedSame == [typeString compare:@"GeometryShaderType"]) || 
 					(NSOrderedSame == [typeString compare:@"FragmentShaderType"]))
 						[self setFileType:@"FragmentShaderType"];
 				else 
@@ -819,6 +862,9 @@ static long StepToToken (const char * source, char * token)
 				if ([autoCompileCheckBox state]) // if we are auto compiling...
 					[self process:self];
 			}
+			break;
+		default:
+			NSLog(@"index out of range, this IS an error. %d", [languagePopUp indexOfSelectedItem]);
 			break;
 	}
 }
@@ -839,6 +885,40 @@ static long StepToToken (const char * source, char * token)
 		return YES;
 	} else
 		return NO;
+}
+
+- (void)highlightLinesWithToken:(NSString *)token withColor:(NSColor *)color
+{
+	NSString *errorString;
+	NSRange lineOffset;
+	int errorLine = 0;
+	unsigned start = 0, nextStart = 0, end = 0;
+	
+	errorString = [self logString];
+	lineOffset = NSMakeRange(0, [errorString length]);
+	lineOffset = [errorString rangeOfString:token options:0 range:lineOffset];
+	while (NSNotFound != lineOffset.location) { // if we found a recoginzed line number pattern
+		NSScanner *scanner = [NSScanner scannerWithString:[errorString substringFromIndex:NSMaxRange(lineOffset)]];
+		int newLine; // = atol (errorString + lineOffset);
+		if ([scanner scanInt:&newLine]) {
+			if (newLine != errorLine) { // if we have a valid error line highlight the line
+				long  i;
+				NSRange range = NSMakeRange (nextStart, 0);
+				for (i = errorLine; i < newLine; i++) {
+					[[self originalString] getLineStart:&start end:&nextStart contentsEnd:&end forRange:range];
+					range.location = nextStart;
+				}
+				range = [[self originalString] lineRangeForRange: NSMakeRange(start, 0)];
+				
+				// red for error line
+				[[originalTextView textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
+				errorLine = newLine;
+			}
+		}
+		lineOffset.location = NSMaxRange(lineOffset); // point at the character right after the token.
+		lineOffset.length = [errorString length] - lineOffset.location;
+		lineOffset = [errorString rangeOfString:token options:0 range:lineOffset];
+	}
 }
 
 -(IBAction) process: (id) sender;
@@ -905,9 +985,6 @@ static long StepToToken (const char * source, char * token)
 		// log already set
 		[compileText setStringValue:@"Internal error (see log)."];
 	} else { // no GL errors
-		const char * errorString;
-		long errorLine = 0, lineOffset = 0;
-		unsigned start = 0, nextStart = 0, end = 0;
 
 		if (logLength)
 			[self logMsg:[NSString stringWithFormat:@"%s", log] format:stanStringAttrib];
@@ -917,51 +994,9 @@ static long StepToToken (const char * source, char * token)
 		[[originalTextView textStorage] beginEditing];
 		[[originalTextView textStorage] addAttribute:NSBackgroundColorAttributeName value:[NSColor whiteColor] range:NSMakeRange(0,[[originalTextView textStorage] length])];
 		// search for "ERROR: 0:###" then highlight line in red
-		errorString = [[self logString]UTF8String];
-		lineOffset = StepToToken ((errorString + lineOffset), "ERROR: 0:");
-		while (0 != lineOffset) { // if we found a recoginzed line number pattern
-			long offset, newLine = atol (errorString + lineOffset);
-			if ((newLine != errorLine) && (newLine != -1)) { // if we have a valid error line highlight the line
-				long  i;
-				NSRange range = NSMakeRange (nextStart, 0);
-				for (i = errorLine; i < newLine; i++) {
-					[[self originalString] getLineStart:&start end:&nextStart contentsEnd:&end forRange:range];
-					range.location = nextStart;
-				}
-				range = [[self originalString] lineRangeForRange: NSMakeRange(start, 0)];
-				
-				// red for error line
-				[[originalTextView textStorage] addAttribute:NSBackgroundColorAttributeName value:[NSColor colorWithCalibratedRed:1.0f green:0.75f blue:0.75f alpha:1.0f] range:range];
-				errorLine = newLine;
-			}
-			offset = StepToToken ((errorString + lineOffset), "ERROR: 0:");
-			if (!offset)
-				break;
-			lineOffset += offset;
-		}
+		[self highlightLinesWithToken:@"ERROR: 0:" withColor:[NSColor colorWithCalibratedRed:1.0f green:0.75f blue:0.75f alpha:1.0f]];
 		// search for "WARNING: 0:###" then highlight line in yellow
-		errorString = [[self logString]UTF8String];
-		lineOffset = StepToToken ((errorString + lineOffset), "WARNING: 0:");
-		while (0 != lineOffset) { // if we found a recoginzed line number pattern
-			long offset, newLine = atol (errorString + lineOffset);
-			if ((newLine != errorLine) && (newLine != -1)) { // if we have a valid error line highlight the line
-				long  i;
-				NSRange range = NSMakeRange (nextStart, 0);
-				for (i = errorLine; i < newLine; i++) {
-					[[self originalString] getLineStart:&start end:&nextStart contentsEnd:&end forRange:range];
-					range.location = nextStart;
-				}
-				range = [[self originalString] lineRangeForRange: NSMakeRange(start, 0)];
-				
-				// red for error line
-				[[originalTextView textStorage] addAttribute:NSBackgroundColorAttributeName value:[NSColor colorWithCalibratedRed:1.0f green:1.0f blue:0.75f alpha:1.0f] range:range];
-				errorLine = newLine;
-			}
-			offset = StepToToken ((errorString + lineOffset), "WARNING: 0:");
-			if (!offset)
-				break;
-			lineOffset += offset;
-		}
+		[self highlightLinesWithToken:@"WARNING: 0:" withColor:[NSColor colorWithCalibratedRed:1.0f green:1.0f blue:0.75f alpha:1.0f]];
 		[[originalTextView textStorage] endEditing];
 		
 		if (1 == status) { // successful compile

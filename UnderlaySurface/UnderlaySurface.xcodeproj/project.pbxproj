@@ -20,23 +20,6 @@
 		5633174807B18E27001419B4 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5633174707B18E27001419B4 /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXBuildStyle section */
-		563316FA07B18C29001419B4 /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Development;
-		};
-		563316FB07B18C29001419B4 /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-			};
-			name = Deployment;
-		};
-/* End PBXBuildStyle section */
-
 /* Begin PBXFileReference section */
 		5633171C07B18C50001419B4 /* UnderlaySurface.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnderlaySurface.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5633171F07B18C50001419B4 /* UnderlaySurface-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "UnderlaySurface-Info.plist"; sourceTree = "<group>"; };
@@ -151,49 +134,11 @@
 			);
 			buildRules = (
 			);
-			buildSettings = {
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = prefix.h;
-				INFOPLIST_FILE = "UnderlaySurface-Info.plist";
-				INSTALL_PATH = "$(USER_APPS_DIR)";
-				OTHER_CFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
-				PRODUCT_NAME = UnderlaySurface;
-				SECTORDER_FLAGS = "";
-			};
 			dependencies = (
 			);
 			name = UnderlaySurface;
 			productName = UnderlaySurface;
 			productReference = 5633171C07B18C50001419B4 /* UnderlaySurface.app */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>UnderlaySurface</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.UnderlaySurface</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-</dict>
-</plist>
-";
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -202,16 +147,12 @@
 		563316FC07B18C29001419B4 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = F0EC258708BBC88D006E9215 /* Build configuration list for PBXProject "UnderlaySurface" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				563316FA07B18C29001419B4 /* Development */,
-				563316FB07B18C29001419B4 /* Deployment */,
-			);
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 0;
 			mainGroup = 563316F807B18C29001419B4;
 			productRefGroup = 5633171D07B18C50001419B4 /* Products */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				5633171B07B18C50001419B4 /* UnderlaySurface */,
 			);
@@ -308,7 +249,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = YES;
 			};
 			name = Debug;
@@ -317,14 +258,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					ppc,
 					i386,
+					ppc,
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 			};
 			name = Release;
 		};

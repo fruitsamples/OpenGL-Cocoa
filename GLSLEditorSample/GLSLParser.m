@@ -46,9 +46,7 @@
 #import "GLSLController.h"
 #import "MyDocument.h"
 
-#import <OpenGL/gl.h>
-#import <OpenGL/glext.h>
-#import <OpenGL/OpenGL.h>
+#import "EXTOpenGL.h"
 
 @implementation GLSLParser
 
@@ -103,6 +101,11 @@
 }
 
 - (void)successfulCompile // a shader was compiled successfully
+{
+	[controller autoLink:self];
+}
+
+- (void)changedGeometryShader // a GeometryShader param was changed
 {
 	[controller autoLink:self];
 }
@@ -163,6 +166,12 @@
 			case GL_FLOAT_MAT2_ARB:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT2_ARB)"]; break;
 			case GL_FLOAT_MAT3_ARB:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT3_ARB)"]; break;
 			case GL_FLOAT_MAT4_ARB:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT4_ARB)"]; break;
+			case GL_FLOAT_MAT2x3:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT2x3)"]; break;
+			case GL_FLOAT_MAT2x4:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT2x4)"]; break;
+			case GL_FLOAT_MAT3x2:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT3x2)"]; break;
+			case GL_FLOAT_MAT3x4:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT3x4)"]; break;
+			case GL_FLOAT_MAT4x2:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT4x2)"]; break;
+			case GL_FLOAT_MAT4x3:   finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT4x3)"]; break;
 			default:  finalString = [finalString stringByAppendingString:@"(No type info)"]; break;
 		}
 		if (size[i] > 1)
@@ -262,6 +271,12 @@
 			case GL_FLOAT_MAT2_ARB:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT2_ARB)"]; break;
 			case GL_FLOAT_MAT3_ARB:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT3_ARB)"]; break;
 			case GL_FLOAT_MAT4_ARB:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT4_ARB)"]; break;
+			case GL_FLOAT_MAT2x3:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT2x3)"]; break;
+			case GL_FLOAT_MAT2x4:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT2x4)"]; break;
+			case GL_FLOAT_MAT3x2:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT3x2)"]; break;
+			case GL_FLOAT_MAT3x4:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT3x4)"]; break;
+			case GL_FLOAT_MAT4x2:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT4x2)"]; break;
+			case GL_FLOAT_MAT4x3:  finalString = [finalString stringByAppendingString:@"(GL_FLOAT_MAT4x3)"]; break;
 			case GL_SAMPLER_1D_ARB:  finalString = [finalString stringByAppendingString:@"(GL_SAMPLER_1D_ARB)"]; break;
 			case GL_SAMPLER_2D_ARB:  finalString = [finalString stringByAppendingString:@"(GL_SAMPLER_2D_ARB)"]; break;
 			case GL_SAMPLER_3D_ARB:  finalString = [finalString stringByAppendingString:@"(GL_SAMPLER_3D_ARB)"]; break;
@@ -297,7 +312,7 @@
 			finalString = [finalString stringByAppendingString:string];
 			for (j = 0; j < size[i]; j++) {
 				char index [10];
-				sprintf (index, "[%ld]", j); // form index
+				sprintf (index, "[%d]", j); // form index
 				strcat (tempName, index); // add index
 				location = glGetUniformLocationARB (program, tempName);
 				string = [NSString stringWithFormat:@" %s @ %d\n", tempName, location]; // print index output
@@ -344,6 +359,7 @@
 					[controller setUniformInfo:currName withLocation:currLocation withLength:currLength withType:currType withSize:currSize];
 					found = 1;
 				}
+				if(!found) currLocation++;
 				onIndex++;
 				if (currSize > 1) { // do we have an array?
 					GLcharARB* elementName = (GLcharARB *) malloc(strlen(currName) + 17 + 1);
@@ -358,6 +374,7 @@
 								[controller setUniformInfo:elementName withLocation:currLocation withLength:currLength withType:currType withSize:currSize];
 								found = 1;
 							}
+							if(!found) currLocation++;
 							onIndex++;
 						}
 					}
@@ -451,14 +468,47 @@
 				for (i = 0; i < 4; i++)
 					fGetVal[i] = [value getCurrentValAtIndex:i];
 				glUniformMatrix2fvARB (currLocation, 1, GL_FALSE, fGetVal);
+				break;
 			case GL_FLOAT_MAT3_ARB:
 				for (i = 0; i < 9; i++)
 					fGetVal[i] = [value getCurrentValAtIndex:i];
 				glUniformMatrix3fvARB (currLocation, 1, GL_FALSE, fGetVal);
+				break;
 			case GL_FLOAT_MAT4_ARB:
 				for (i = 0; i < 16; i++)
 					fGetVal[i] = [value getCurrentValAtIndex:i];
 				glUniformMatrix4fvARB (currLocation, 1, GL_FALSE, fGetVal);
+				break;
+			case GL_FLOAT_MAT2x3:
+				for (i = 0; i < 2*3; i++)
+					fGetVal[i] = [value getCurrentValAtIndex:i];
+				glUniformMatrix2x3fv (currLocation, 1, GL_FALSE, fGetVal);
+				break;
+			case GL_FLOAT_MAT2x4:
+				for (i = 0; i < 2*4; i++)
+					fGetVal[i] = [value getCurrentValAtIndex:i];
+				glUniformMatrix2x4fv (currLocation, 1, GL_FALSE, fGetVal);
+				break;
+			case GL_FLOAT_MAT3x2:
+				for (i = 0; i < 3*2; i++)
+					fGetVal[i] = [value getCurrentValAtIndex:i];
+				glUniformMatrix3x2fv (currLocation, 1, GL_FALSE, fGetVal);
+				break;
+			case GL_FLOAT_MAT3x4:
+				for (i = 0; i < 3*4; i++)
+					fGetVal[i] = [value getCurrentValAtIndex:i];
+				glUniformMatrix3x4fv (currLocation, 1, GL_FALSE, fGetVal);
+				break;
+			case GL_FLOAT_MAT4x2:
+				for (i = 0; i < 4*2; i++)
+					fGetVal[i] = [value getCurrentValAtIndex:i];
+				glUniformMatrix4x2fv (currLocation, 1, GL_FALSE, fGetVal);
+				break;
+			case GL_FLOAT_MAT4x3:
+				for (i = 0; i < 4*3; i++)
+					fGetVal[i] = [value getCurrentValAtIndex:i];
+				glUniformMatrix4x3fv (currLocation, 1, GL_FALSE, fGetVal);
+				break;
 			default: 
 				break;
 		}
@@ -507,6 +557,13 @@
 		error = [self checkReportOpenGLError: @"glCreateProgramObjectARB"];
 	}
 	if (program && NO == error) {
+{
+GLenum inputGeomTypes[]={GL_POINTS,GL_LINES,GL_LINES_ADJACENCY_EXT,GL_TRIANGLES,GL_TRIANGLES_ADJACENCY_EXT};
+GLenum outputGeomTypes[]={GL_POINTS,GL_LINE_STRIP,GL_TRIANGLE_STRIP};
+glProgramParameteriEXT((GLuint)program, GL_GEOMETRY_VERTICES_OUT_EXT, [[controller geomVerticesOut] intValue]);
+glProgramParameteriEXT((GLuint)program, GL_GEOMETRY_INPUT_TYPE_EXT, inputGeomTypes[[[controller geomInputType] indexOfSelectedItem]]);
+glProgramParameteriEXT((GLuint)program, GL_GEOMETRY_OUTPUT_TYPE_EXT, outputGeomTypes[[[controller geomOutputType] indexOfSelectedItem]]);
+}
 		glLinkProgramARB (program);
 		error = [self checkReportOpenGLError: @"glLinkProgramARB"];
 	} else {

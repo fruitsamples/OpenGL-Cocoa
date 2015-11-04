@@ -46,8 +46,7 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#import <OpenGL/gl.h>
-#import <OpenGL/glext.h>
+#import "EXTOpenGL.h"
 
 @class GLSLParser;
 
